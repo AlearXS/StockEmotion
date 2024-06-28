@@ -1,0 +1,59 @@
+# 忽略Python编译后的字节码文件
+__pycache__/
+*.pyc
+*.pyo
+
+# 忽略Python调试过程中的.pdb文件
+*.pdb
+
+# 忽略虚拟环境文件夹
+.env
+.venv/
+venv/
+env/
+
+# 忽略Docker相关的构建上下文和缓存
+docker-compose.yml
+Dockerfile
+.dockerignore
+build/
+docker/
+
+# 忽略IDE和编辑器的配置文件和临时文件
+.vscode/
+.idea/
+*.sublime-workspace
+*.swp
+*.swo
+
+# 忽略日志文件
+logs/
+*.log
+
+# 忽略测试产生的coverage报告
+htmlcov/
+.coverage
+
+# 忽略数据库迁移过程中的临时文件
+alembic/
+migrations/
+
+# 忽略包管理工具的安装目录和缓存
+/node_modules/
+/yarn.lock
+package-lock.json
+pipfile.lock
+
+# 忽略Jupyter Notebook的检查点文件
+.ipynb_checkpoints/
+
+# 忽略Git自身的忽略文件和日志
+.gitmodules
+.DS_Store
+Thumbs.db
+*.DS_Store
+
+# 如果你的项目中使用了特定的文件或文件夹，也应该在这里添加相应的忽略规则
+# 例如，如果你使用了特定的配置文件或者生成的静态文件夹
+# config_private.py
+# static_generated/
