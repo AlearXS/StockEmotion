@@ -6,21 +6,14 @@
       </div>
       <div class="content">
         <div class="contentTitle">
-          早安，
           {{ currentUser.name }}
-          ，祝你开心每一天！
+          ，祝您日进斗金！
         </div>
-        <div>{{ currentUser.title }} |{{ currentUser.group }}</div>
+        <div>{{ currentUser.title }}</div>
       </div>
       <div class="extraContent">
         <div class="statItem">
-          <a-statistic title="项目数" :value="56" />
-        </div>
-        <div class="statItem">
-          <a-statistic title="团队内排名" :value="8" suffix="/ 24" />
-        </div>
-        <div class="statItem">
-          <a-statistic title="项目访问" :value="2223" />
+          <a-statistic title="持股数" :value="56" />
         </div>
       </div>
     </div>
@@ -31,13 +24,13 @@
           <a-card
             class="projectList"
             :style="{ marginBottom: '24px' }"
-            title="进行中的项目"
+            title="股票讯息"
             :bordered="false"
             :loading="false"
             :body-style="{ padding: 0 }"
           >
             <template #extra>
-              <a href=""> <span style="color: #1890ff">全部项目</span> </a>
+              <a href=""> <span style="color: #1890ff">我的收藏</span> </a>
             </template>
             <a-card-grid
               v-for="item in projectNotice"
@@ -70,57 +63,9 @@
               </a-card>
             </a-card-grid>
           </a-card>
-          <a-card
-            :body-style="{ padding: 0 }"
-            :bordered="false"
-            class="activeCard"
-            title="动态"
-            :loading="false"
-          >
-            <a-list :data-source="activities" class="activitiesList">
-              <template #renderItem="{ item }">
-                <a-list-item :key="item.id">
-                  <a-list-item-meta>
-                    <template #title>
-                      <span>
-                        <a class="username">{{ item.user.name }}</a
-                        >&nbsp;
-                        <span class="event">
-                          <span>{{ item.template1 }}</span
-                          >&nbsp;
-                          <a href="" style="color: #1890ff">
-                            {{ item?.group?.name }} </a
-                          >&nbsp; <span>{{ item.template2 }}</span
-                          >&nbsp;
-                          <a href="" style="color: #1890ff">
-                            {{ item?.project?.name }}
-                          </a>
-                        </span>
-                      </span>
-                    </template>
-                    <template #avatar>
-                      <a-avatar :src="item.user.avatar" />
-                    </template>
-                    <template #description>
-                      <span class="datetime" :title="item.updatedAt">
-                        {{ item.updatedAt }}
-                      </span>
-                    </template>
-                  </a-list-item-meta>
-                </a-list-item>
-              </template>
-            </a-list>
-          </a-card>
+          <el-calendar v-model="value" />
         </a-col>
         <a-col :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card
-            :style="{ marginBottom: '24px' }"
-            title="快速开始 / 便捷导航"
-            :bordered="false"
-            :body-style="{ padding: 0 }"
-          >
-            <EditableLinkGroup />
-          </a-card>
           <a-card
             :style="{ marginBottom: '24px' }"
             :bordered="false"
@@ -190,22 +135,22 @@ export default {
 
 <script setup>
 import { Radar } from "@antv/g2plot";
+import { ref } from 'vue'
 import EditableLinkGroup from "./editable-link-group.vue";
 
 defineOptions({
   name: "DashBoard",
 });
-
+const value = ref(new Date())
 const currentUser = {
   avatar: "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
   name: "吴彦祖",
   userid: "00000001",
   email: "antdesign@alipay.com",
   signature: "海纳百川，有容乃大",
-  title: "交互专家",
+  title: "资深用户",
   group: "蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED",
 };
-
 const projectNotice = [
   {
     id: "xxx1",
@@ -264,122 +209,9 @@ const projectNotice = [
     logo: "https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png",
     description: "生命就像一盒巧克力，结果往往出人意料",
     updatedAt: "6 年前",
-    member: "骗你来学计算机",
+    member: "404NOtFOUnd",
     href: "",
     memberLink: "",
-  },
-];
-
-const activities = [
-  {
-    id: "trend-1",
-    updatedAt: "几秒前",
-    user: {
-      name: "曲丽丽",
-      avatar:
-        "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
-    },
-    group: {
-      name: "高逼格设计天团",
-      link: "http://github.com/",
-    },
-    project: {
-      name: "六月迭代",
-      link: "http://github.com/",
-    },
-    template1: "在",
-    template2: "新建项目",
-  },
-  {
-    id: "trend-2",
-    updatedAt: "几秒前",
-    user: {
-      name: "付小小",
-      avatar:
-        "https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png",
-    },
-    group: {
-      name: "高逼格设计天团",
-      link: "http://github.com/",
-    },
-    project: {
-      name: "六月迭代",
-      link: "http://github.com/",
-    },
-    template1: "在",
-    template2: "新建项目",
-  },
-  {
-    id: "trend-3",
-    updatedAt: "几秒前",
-    user: {
-      name: "林东东",
-      avatar:
-        "https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png",
-    },
-    group: {
-      name: "中二少女团",
-      link: "http://github.com/",
-    },
-    project: {
-      name: "六月迭代",
-      link: "http://github.com/",
-    },
-    template1: "在",
-    template2: "新建项目",
-  },
-  {
-    id: "trend-4",
-    updatedAt: "几秒前",
-    user: {
-      name: "周星星",
-      avatar:
-        "https://gw.alipayobjects.com/zos/rmsportal/WhxKECPNujWoWEFNdnJE.png",
-    },
-    group: {
-      name: "5 月日常迭代",
-      link: "http://github.com/",
-    },
-    template1: "将",
-    template2: "更新至已发布状态",
-  },
-  {
-    id: "trend-5",
-    updatedAt: "几秒前",
-    user: {
-      name: "朱偏右",
-      avatar:
-        "https://gw.alipayobjects.com/zos/rmsportal/ubnKSIfAJTxIgXOKlciN.png",
-    },
-    group: {
-      name: "工程效能",
-      link: "http://github.com/",
-    },
-    project: {
-      name: "留言",
-      link: "http://github.com/",
-    },
-    template1: "在",
-    template2: "发布了",
-  },
-  {
-    id: "trend-6",
-    updatedAt: "几秒前",
-    user: {
-      name: "乐哥",
-      avatar:
-        "https://gw.alipayobjects.com/zos/rmsportal/jZUIxmJycoymBprLOUbT.png",
-    },
-    group: {
-      name: "程序员日常",
-      link: "http://github.com/",
-    },
-    project: {
-      name: "品牌迭代",
-      link: "http://github.com/",
-    },
-    template1: "在",
-    template2: "新建项目",
   },
 ];
 
