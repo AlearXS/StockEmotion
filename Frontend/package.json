@@ -1,7 +1,7 @@
 {
   "name": "vfadmin",
   "version": "1.1.2",
-  "description": "vfadmin管理系统",
+  "description": "管理系统",
   "author": "insistence",
   "license": "MIT",
   "type": "module",
