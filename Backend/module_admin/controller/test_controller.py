@@ -17,15 +17,16 @@ import numpy as np
 testController = APIRouter(prefix='/stock')
 
 
-@testController.get("/overall")
+@testController.get("/overall", response_model=list[PageResponseModel])
 async def get_system_test_list(request: Request):
     '''
     测试前后端连接，返回股票总览
     '''
     logger.info('testing')
     try:
+        res = get_stock_overall_list_service()
         logger.info('获取成功')
-        return ResponseUtil.success(model_content=get_stock_overall_list_service())
+        return ResponseUtil.success(model_content=res)
     except Exception as e:
         logger.exception(e)
         return ResponseUtil.error(msg=str(e))

@@ -5,3 +5,6 @@ class StockOverallModel(BaseModel):
 	stock: object
 	kcb: object
 	zb: object
+
+class StockOverallModels(BaseModel):
+	content: list[StockOverallModel]
