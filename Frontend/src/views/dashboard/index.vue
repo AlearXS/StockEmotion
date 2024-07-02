@@ -24,13 +24,13 @@
           <a-card
             class="projectList"
             :style="{ marginBottom: '24px' }"
-            title="股票讯息"
+            title="相关网站"
             :bordered="false"
             :loading="false"
             :body-style="{ padding: 0 }"
           >
             <template #extra>
-              <a href=""> <span style="color: #1890ff">我的收藏</span> </a>
+              <a href="/monitor/druid"> <span style="color: #1890ff">我的收藏</span> </a>
             </template>
             <a-card-grid
               v-for="item in projectNotice"
@@ -46,7 +46,7 @@
                   <template #title>
                     <div class="cardTitle">
                       <a-avatar size="small" :src="item.logo" />
-                      <a :href="item.href">
+                      <a :href="item.href" target="_blank">
                         {{ item.title }}
                       </a>
                     </div>
@@ -69,30 +69,10 @@
           <a-card
             :style="{ marginBottom: '24px' }"
             :bordered="false"
-            title="XX 指数"
+            title="今日指数"
           >
             <div class="chart">
               <div ref="radarContainer" />
-            </div>
-          </a-card>
-          <a-card
-            :body-style="{ paddingTop: '12px', paddingBottom: '12px' }"
-            :bordered="false"
-            title="团队"
-          >
-            <div class="members">
-              <a-row :gutter="48">
-                <a-col
-                  v-for="item in projectNotice"
-                  :key="`members-item-${item.id}`"
-                  :span="12"
-                >
-                  <a :href="item.href">
-                    <a-avatar :src="item.logo" size="small" />
-                    <span class="member">{{ item.member }}</span>
-                  </a>
-                </a-col>
-              </a-row>
             </div>
           </a-card>
         </a-col>
@@ -154,63 +134,63 @@ const currentUser = {
 const projectNotice = [
   {
     id: "xxx1",
-    title: "Alipay",
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png",
-    description: "那是一种内在的东西，他们到达不了，也无法触及的",
-    updatedAt: "几秒前",
-    member: "科学搬砖组",
-    href: "",
+    title: "巨潮资讯",
+    logo: "http://static.cninfo.com.cn/new/img/favicon.ico",
+    description: "中国证监会指定信息披露网站",
+    updatedAt: "",
+    member: "行情分析与数据服务",
+    href: "http://www.cninfo.com.cn",
     memberLink: "",
   },
   {
     id: "xxx2",
-    title: "Angular",
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png",
-    description: "希望是一个好东西，也许是最好的，好东西是不会消亡的",
-    updatedAt: "6 年前",
-    member: "全组都是吴彦祖",
-    href: "",
+    title: " 东方财富网",
+    logo: "//g1.dfcfw.com/g1/special/Apple_ico.png",
+    description: "全面股票行情、股市直播、大盘分析",
+    updatedAt: "",
+    member: "综合性门户",
+    href: "https://www.eastmoney.com/",
     memberLink: "",
   },
   {
     id: "xxx3",
-    title: "Ant Design",
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png",
-    description: "城镇中有那么多的酒馆，她却偏偏走进了我的酒馆",
-    updatedAt: "几秒前",
-    member: "中二少女团",
-    href: "",
+    title: "新浪财经",
+    logo: "https://www.sinaimg.cn/dy/images/header/2009/standardl2nav_sina_new.gif",
+    description: "即时股票市场新闻、专家评论",
+    updatedAt: "",
+    member: "新闻资讯",
+    href: "https://finance.sina.com.cn/stock",
     memberLink: "",
   },
   {
     id: "xxx4",
-    title: "Ant Design Pro",
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/sfjbOqnsXXJgNCjCzDBL.png",
-    description: "那时候我只会想自己想要什么，从不想自己拥有什么",
-    updatedAt: "6 年前",
-    member: "程序员日常",
-    href: "",
+    title: "证券时报",
+    logo: "https://static-web.stcn.com/static/images/zqsb.png",
+    description: "专业的财经新闻和分析",
+    updatedAt: "",
+    member: "新闻资讯",
+    href: "https://www.stcn.com/article/index.html",
     memberLink: "",
   },
   {
     id: "xxx5",
-    title: "Bootstrap",
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/siCrBXXhmvTQGWPNLBow.png",
+    title: "同花顺财经",
+    logo: "http://i.thsi.cn/images/logo_ths.jpg",
     description:
-      "凛冬将至",
-    updatedAt: "6 年前",
-    member: "高逼格设计天团",
-    href: "",
+      "股票行情、财经资讯及交易服务",
+    updatedAt: "",
+    member: "行情分析与数据服务",
+    href: "http://www.10jqka.com.cn/stock",
     memberLink: "",
   },
   {
     id: "xxx6",
-    title: "React",
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png",
-    description: "生命就像一盒巧克力，结果往往出人意料",
-    updatedAt: "6 年前",
-    member: "404NOtFOUnd",
-    href: "",
+    title: "中信证券",
+    logo: "https://www.citics.com/newsite/ggmk/wztb/wzlogo/201803/W020180711560116478457.png",
+    description: "全面的金融服务",
+    updatedAt: "",
+    member: "综合性门户",
+    href: "https://www.citics.com/?spm=5176.28103460.0.0.54093da2lkOyuF",
     memberLink: "",
   },
 ];

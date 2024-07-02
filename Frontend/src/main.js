@@ -2,6 +2,11 @@ import { createApp } from 'vue'
 
 import Cookies from 'js-cookie'
 
+import HighchartsVue from 'highcharts-vue'
+import Highcharts from 'highcharts'
+import stockInit from 'highcharts/modules/stock'
+import wordcloud from 'highcharts/modules/wordcloud'
+
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
@@ -70,6 +75,19 @@ app.use(router)
 app.use(store)
 app.use(plugins)
 app.use(elementIcons)
+stockInit(Highcharts)
+wordcloud(Highcharts)
+Highcharts.setOptions({
+  global: {
+    useUTC: false
+  },
+  lang: {
+    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+    weekdays: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+    shortMonths: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+  }
+})
+app.use(HighchartsVue)
 app.component('svg-icon', SvgIcon)
 
 directive(app)
