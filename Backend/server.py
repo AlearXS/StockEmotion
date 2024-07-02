@@ -19,7 +19,7 @@ from module_admin.controller.job_controller import jobController
 from module_admin.controller.server_controller import serverController
 from module_admin.controller.cache_controller import cacheController
 from module_admin.controller.common_controller import commonController
-from module_admin.controller.test_controller import testController
+from module_admin.controller.stock_controller import stockController
 from config.env import AppConfig
 from config.get_redis import RedisUtil
 from config.get_db import init_create_table
@@ -78,7 +78,7 @@ controller_list = [
     {'router': serverController, 'tags': ['系统监控-菜单管理']},
     {'router': cacheController, 'tags': ['系统监控-缓存监控']},
     {'router': commonController, 'tags': ['通用模块']},
-    {'router': testController, 'tags': ['测试用控制器']}
+    {'router': stockController, 'tags': ['股票数据']}
 ]
 
 for controller in controller_list:
