@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { getServer } from '@/api/monitor/server'
+import { getServer} from '@/api/monitor/server'
 
 const server = ref([]);
 const { proxy } = getCurrentInstance();

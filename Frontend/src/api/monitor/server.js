@@ -7,3 +7,11 @@ export function getServer() {
     method: 'get'
   })
 }
+
+//测试
+export function getStock() {
+  return request({
+    url: '/stock/kline/000001',
+    method: 'get'
+  })
+}
