@@ -4,6 +4,7 @@ from config.get_db import get_db
 from module_admin.service.login_service import LoginService, CurrentUserModel
 from module_admin.service.dept_service import DeptService, DeptModel
 from module_admin.service.stock_overall_service import get_stock_overall_list_service
+from module_admin.service.stock_service import *
 from utils.response_util import *
 from utils.log_util import *
 from utils.page_util import PageResponseModel
@@ -53,11 +54,10 @@ def kline(id : str = '000001'):
         #                         end_date = end_date, \
         #                         adjust = "前复权")
         # stock_df['时间戳'] = stock_df['日期'].apply(lambda date: datetime.timestamp(datetime.combine(date, datetime.min.time())))
-        stock_df = pd.read_csv('test_kline.csv')
-        print(stock_df.head())
+        res = get_short_kline_for_painting_by_id(id)
 
 
-        return ResponseUtil.success(data=stock_df.to_json())
+        return ResponseUtil.success(data=res)
     except Exception as e:
         logger.exception(e)
         return ResponseUtil.error(msg=str(e))
