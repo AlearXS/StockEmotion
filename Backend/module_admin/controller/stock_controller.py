@@ -21,6 +21,22 @@ import datetime
 
 stockController = APIRouter(prefix='/stock')
 
+@stockController.get('/list')
+async def get_stock_heat_list():
+	'''
+	返回实时股票行情
+	按涨跌幅排序
+	'''
+	logger.info('股票热度')
+	try:
+		df = ak.stock_hot_rank_em() 
+		# df.sort_values('涨跌幅', inplace=True)
+		# res = StockService.get_short_kline_for_painting_by_code(query_db, code, startdate, end_date, adjust)
+		return ResponseUtil.success(data=[df.columns.tolist(), df.values.tolist()])
+	except Exception as e:
+		logger.exception(e)
+		return ResponseUtil.error(msg=str(e))
+
 
 @stockController.get("/overall", response_model=list[PageResponseModel])
 async def get_system_test_list(request: Request):
