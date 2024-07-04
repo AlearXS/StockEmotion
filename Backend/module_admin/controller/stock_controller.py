@@ -15,8 +15,8 @@ from module_admin.annotation.log_annotation import log_decorator
 import akshare as ak
 import numpy as np
 import pandas as pd
-from datetime import datetime
-import datetime as dt
+# from datetime import datetime
+import datetime
 
 
 stockController = APIRouter(prefix='/stock')
@@ -36,30 +36,19 @@ async def get_system_test_list(request: Request):
         logger.exception(e)
         return ResponseUtil.error(msg=str(e))
     
-@stockController.get('/kline/{id}')
-def kline(id : str = '000001'):
+@stockController.get('/kline/{code}')
+def kline(code : str = '000001', startdate: datetime.date = datetime.date(2023, 1, 1), end_date = datetime.datetime.now().date(), adjust: str = "", query_db: Session = Depends(get_db)):
     '''
-    : param id 股票代码
+    :param code 股票代码
+    :param adjust 复权方式，当前无效果，默认无复权
     :return 最近一年的 k 线数据 : dataframe 
     '''
     
-    logger.info(f'正在获取 {id} 的 k 线数据')
+    logger.info(f'正在获取 {code} 的 k 线数据')
 
     try:
-        # start_date = (datetime.now().date() - dt.timedelta(365)).strftime("%y%m%d")
-        # end_date = datetime.now().date().strftime("%y%m%d")
-        # stock_df = ak.stock_zh_a_hist(symbol=id, \
-        #                         period="daily", \
-        #                         start_date = start_date, \
-        #                         end_date = end_date, \
-        #                         adjust = "前复权")
-        # stock_df['时间戳'] = stock_df['日期'].apply(lambda date: datetime.timestamp(datetime.combine(date, datetime.min.time())))
-        res = get_short_kline_for_painting_by_id(id)
-
-
+        res = StockService.get_short_kline_for_painting_by_code(query_db, code, startdate, end_date, adjust)
         return ResponseUtil.success(data=res)
     except Exception as e:
         logger.exception(e)
         return ResponseUtil.error(msg=str(e))
-        
-        
