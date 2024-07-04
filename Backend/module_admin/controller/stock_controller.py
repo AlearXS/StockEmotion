@@ -5,6 +5,7 @@ from module_admin.service.login_service import LoginService, CurrentUserModel
 from module_admin.service.dept_service import DeptService, DeptModel
 from module_admin.service.stock_overall_service import get_stock_overall_list_service
 from module_admin.service.stock_service import *
+from module_admin.controller.like_controller import likeController
 from utils.response_util import *
 from utils.log_util import *
 from utils.page_util import PageResponseModel
@@ -68,3 +69,4 @@ def kline(code : str = '000001', startdate: datetime.date = datetime.date(2023, 
 	except Exception as e:
 		logger.exception(e)
 		return ResponseUtil.error(msg=str(e))
+stockController.include_router(likeController)

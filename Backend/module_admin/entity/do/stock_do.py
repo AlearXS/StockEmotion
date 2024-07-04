@@ -24,7 +24,7 @@ class KLine(Base):
 
 	# id = Column(Integer)
 	date = Column(Date)
-	code = Column(String(30, collation='utf8_general_ci'), nullable=False, comment='角色名称')
+	code = Column(String(30, collation='utf8_general_ci'), nullable=False, comment='股票代码')
 	open = Column(Float, nullable=False, comment='开盘价')
 	close = Column(Float, nullable=False, comment='收盘')
 	high = Column(Float, nullable=False, comment='最高')

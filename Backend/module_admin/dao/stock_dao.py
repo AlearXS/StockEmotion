@@ -6,7 +6,7 @@ from module_admin.entity.vo.dict_vo import *
 from utils.time_format_util import list_format_datetime
 from utils.page_util import PageUtil
 import datetime
-
+import pandas as pd
 
 class StockDao:
     """
@@ -21,7 +21,7 @@ class StockDao:
         :param dict_id: 字典类型id
         :return: 字典类型信息对象
         """
-        kline_for_painting_info = db.query(KLine.date, KLine.open, KLine.high, KLine.low, KLine.close) \
+        kline_for_painting_info = db.query(KLine.date, KLine.open, KLine.high, KLine.low, KLine.close, KLine.amount) \
             .filter(KLine.code == code,  KLine.date >= startdate, KLine.date <= end_date) \
             .all()
             # .first()

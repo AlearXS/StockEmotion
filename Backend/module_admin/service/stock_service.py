@@ -19,7 +19,7 @@ class StockService:
 		# breakpoint()
 		
 		res = [
-			[datetime.datetime.combine(datetime.datetime.fromisoformat(row[0]), datetime.time(0, 0, 0)).timestamp() * 1000, row[1], row[2], row[3], row[4]]
+			[datetime.datetime.combine(datetime.datetime.fromisoformat(row[0]), datetime.time(0, 0, 0)).timestamp() * 1000, row[1], row[2], row[3], row[4], row[5]]
 			for row in res
 		]
 
