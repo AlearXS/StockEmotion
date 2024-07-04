@@ -32,7 +32,7 @@ async def get_stock_heat_list():
 		df = ak.stock_hot_rank_em() 
 		# df.sort_values('涨跌幅', inplace=True)
 		# res = StockService.get_short_kline_for_painting_by_code(query_db, code, startdate, end_date, adjust)
-		return ResponseUtil.success(data=[df.columns.tolist(), df.values.tolist()])
+		return ResponseUtil.success(data=[{**row} for _, row in df.iterrows()])
 	except Exception as e:
 		logger.exception(e)
 		return ResponseUtil.error(msg=str(e))
