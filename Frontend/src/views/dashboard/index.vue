@@ -21,27 +21,13 @@
     <div style="padding: 10px">
       <a-row :gutter="24">
         <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card
-            class="projectList"
-            :style="{ marginBottom: '24px' }"
-            title="相关网站"
-            :bordered="false"
-            :loading="false"
-            :body-style="{ padding: 0 }"
-          >
+          <a-card class="projectList" :style="{ marginBottom: '24px' }" title="相关网站" :bordered="false" :loading="false"
+            :body-style="{ padding: 0 }">
             <template #extra>
               <a href="/monitor/druid"> <span style="color: #1890ff">我的收藏</span> </a>
             </template>
-            <a-card-grid
-              v-for="item in projectNotice"
-              :key="item.id"
-              class="projectGrid"
-            >
-              <a-card
-                :body-style="{ padding: 0 }"
-                style="box-shadow: none"
-                :bordered="false"
-              >
+            <a-card-grid v-for="item in projectNotice" :key="item.id" class="projectGrid">
+              <a-card :body-style="{ padding: 0 }" style="box-shadow: none" :bordered="false">
                 <a-card-meta :description="item.description" class="w-full">
                   <template #title>
                     <div class="cardTitle">
@@ -66,11 +52,7 @@
           <el-calendar v-model="value" />
         </a-col>
         <a-col :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card
-            :style="{ marginBottom: '24px' }"
-            :bordered="false"
-            title="今日指数"
-          >
+          <a-card :style="{ marginBottom: '24px' }" :bordered="false" title="今日指数">
             <div class="chart">
               <div ref="radarContainer" />
             </div>
@@ -198,79 +180,79 @@ const projectNotice = [
 const radarContainer = ref();
 const radarData = [
   {
-    name: "个人",
-    label: "引用",
-    value: 10,
+    name: "A股",
+    label: "表现",
+    value: 6,
   },
   {
-    name: "个人",
-    label: "口碑",
+    name: "A股",
+    label: "成交量",
     value: 8,
   },
   {
-    name: "个人",
-    label: "产量",
+    name: "A股",
+    label: "市盈率",
     value: 4,
   },
   {
-    name: "个人",
-    label: "贡献",
+    name: "A股",
+    label: "汇率影响",
     value: 5,
   },
   {
-    name: "个人",
-    label: "热度",
+    name: "A股",
+    label: "监管",
     value: 7,
   },
   {
-    name: "团队",
-    label: "引用",
-    value: 3,
+    name: "美股",
+    label: "表现",
+    value: 10,
   },
   {
-    name: "团队",
-    label: "口碑",
+    name: "美股",
+    label: "成交量",
     value: 9,
   },
   {
-    name: "团队",
-    label: "产量",
-    value: 6,
+    name: "美股",
+    label: "市盈率",
+    value: 9,
   },
   {
-    name: "团队",
-    label: "贡献",
+    name: "美股",
+    label: "汇率影响",
     value: 3,
   },
   {
-    name: "团队",
-    label: "热度",
-    value: 1,
+    name: "美股",
+    label: "监管",
+    value: 8,
   },
   {
-    name: "部门",
-    label: "引用",
-    value: 4,
-  },
-  {
-    name: "部门",
-    label: "口碑",
-    value: 1,
-  },
-  {
-    name: "部门",
-    label: "产量",
+    name: "港股",
+    label: "表现",
     value: 6,
   },
   {
-    name: "部门",
-    label: "贡献",
+    name: "港股",
+    label: "成交量",
     value: 5,
   },
   {
-    name: "部门",
-    label: "热度",
-    value: 7,
+    name: "港股",
+    label: "市盈率",
+    value: 6,
+  },
+  {
+    name: "港股",
+    label: "汇率影响",
+    value: 5,
+  },
+  {
+    name: "港股",
+    label: "监管",
+    value: 5,
   },
 ];
 let radar;
@@ -308,11 +290,13 @@ onBeforeUnmount(() => {
 // ------------------------
 .clearfix() {
   zoom: 1;
+
   &::before,
   &::after {
     display: table;
     content: " ";
   }
+
   &::after {
     clear: both;
     height: 0;
@@ -323,9 +307,11 @@ onBeforeUnmount(() => {
 
 .activitiesList {
   padding: 0 24px 8px 24px;
+
   .username {
     color: rgba(0, 0, 0, 0.65);
   }
+
   .event {
     font-weight: normal;
   }
@@ -336,15 +322,18 @@ onBeforeUnmount(() => {
   padding: 12px;
   margin-bottom: 24px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
   .avatar {
     flex: 0 1 72px;
-    & > span {
+
+    &>span {
       display: block;
       width: 72px;
       height: 72px;
       border-radius: 72px;
     }
   }
+
   .content {
     position: relative;
     top: 4px;
@@ -352,6 +341,7 @@ onBeforeUnmount(() => {
     margin-left: 24px;
     color: rgba(0, 0, 0, 0.45);
     line-height: 22px;
+
     .contentTitle {
       margin-bottom: 12px;
       color: rgba(0, 0, 0, 0.85);
@@ -367,26 +357,31 @@ onBeforeUnmount(() => {
 
   float: right;
   white-space: nowrap;
+
   .statItem {
     position: relative;
     display: inline-block;
     padding: 0 32px;
-    > p:first-child {
+
+    >p:first-child {
       margin-bottom: 4px;
       color: rgba(0, 0, 0, 0.45);
       font-size: 14px;
       line-height: 22px;
     }
-    > p {
+
+    >p {
       margin: 0;
       color: rgba(0, 0, 0, 0.85);
       font-size: 30px;
       line-height: 38px;
-      > span {
+
+      >span {
         color: rgba(0, 0, 0, 0.45);
         font-size: 20px;
       }
     }
+
     &::after {
       position: absolute;
       top: 8px;
@@ -396,8 +391,10 @@ onBeforeUnmount(() => {
       background-color: #e8e8e8;
       content: "";
     }
+
     &:last-child {
       padding-right: 0;
+
       &::after {
         display: none;
       }
@@ -413,12 +410,14 @@ onBeforeUnmount(() => {
     color: rgba(0, 0, 0, 0.65);
     transition: all 0.3s;
     .textOverflow();
+
     .member {
       margin-left: 12px;
       font-size: 14px;
       line-height: 24px;
       vertical-align: top;
     }
+
     &:hover {
       color: #1890ff;
     }
@@ -432,8 +431,10 @@ onBeforeUnmount(() => {
     color: rgba(0, 0, 0, 0.45);
     line-height: 22px;
   }
+
   .cardTitle {
     font-size: 0;
+
     a {
       display: inline-block;
       height: 24px;
@@ -442,14 +443,17 @@ onBeforeUnmount(() => {
       font-size: 14px;
       line-height: 24px;
       vertical-align: top;
+
       &:hover {
         color: #1890ff;
       }
     }
   }
+
   .projectGrid {
     width: 33.33%;
   }
+
   .projectItemContent {
     display: flex;
     flex-basis: 100%;
@@ -459,15 +463,18 @@ onBeforeUnmount(() => {
     font-size: 12px;
     line-height: 20px;
     .textOverflow();
+
     a {
       display: inline-block;
       flex: 1 1 0;
       color: rgba(0, 0, 0, 0.45);
       .textOverflow();
+
       &:hover {
         color: #1890ff;
       }
     }
+
     .datetime {
       flex: 0 0 auto;
       float: right;
@@ -484,11 +491,14 @@ onBeforeUnmount(() => {
   .activeCard {
     margin-bottom: 24px;
   }
+
   .members {
     margin-bottom: 0;
   }
+
   .extraContent {
     margin-left: -44px;
+
     .statItem {
       padding: 0 16px;
     }
@@ -499,15 +509,19 @@ onBeforeUnmount(() => {
   .activeCard {
     margin-bottom: 24px;
   }
+
   .members {
     margin-bottom: 0;
   }
+
   .extraContent {
     float: none;
     margin-right: 0;
+
     .statItem {
       padding: 0 16px;
       text-align: left;
+
       &::after {
         display: none;
       }
@@ -519,6 +533,7 @@ onBeforeUnmount(() => {
   .extraContent {
     margin-left: -16px;
   }
+
   .projectList {
     .projectGrid {
       width: 50%;
@@ -529,10 +544,12 @@ onBeforeUnmount(() => {
 @media screen and (max-width: 576px) {
   .pageHeaderContent {
     display: block;
+
     .content {
       margin-left: 0;
     }
   }
+
   .extraContent {
     .statItem {
       float: none;
