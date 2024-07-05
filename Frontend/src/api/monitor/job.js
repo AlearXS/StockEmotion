@@ -58,14 +58,10 @@ export function changeJobStatus(jobId, status) {
 
 
 // 定时任务立即执行一次
-export function runJob(jobId, jobGroup) {
-  const data = {
-    jobId,
-    jobGroup
-  }
+export function runJob() {
   return request({
     url: '/monitor/job/run',
     method: 'put',
-    data: data
+    data: jobId
   })
 }
