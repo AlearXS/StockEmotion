@@ -58,7 +58,7 @@ async def get_overall(request: Request):
 		return ResponseUtil.error(msg=str(e))
 	
 @stockController.get('/kline/{code}')
-def kline(code : str = '000001', startdate: datetime.date = datetime.date(2023, 1, 1), end_date = datetime.datetime.now().date(), adjust: str = "", query_db: Session = Depends(get_db)):
+async def kline(code : str = '000001', startdate: datetime.date = datetime.date(2023, 1, 1), end_date = datetime.datetime.now().date(), adjust: str = "", query_db: Session = Depends(get_db)):
 	'''
 	:param code 股票代码
 	:param adjust 复权方式，默认无复权
@@ -73,4 +73,9 @@ def kline(code : str = '000001', startdate: datetime.date = datetime.date(2023, 
 	except Exception as e:
 		logger.exception(e)
 		return ResponseUtil.error(msg=str(e))
+
+@stockController.get('pred/{code}')
+async def pred(code: str):
+	return ResponseUtil.success(data='ffff')
+
 stockController.include_router(likeController)
