@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="jobList" >
+    <el-table v-loading="loading" :data="jobList">
       <el-table-column label="股票代码" width="100" align="center" prop="jobId" />
       <el-table-column label="股票名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
       <el-table-column label="开盘价" align="center" prop="jobGroup" />
@@ -40,7 +40,7 @@
       v-model:limit="queryParams.pageSize" @pagination="getList" />
 
 
-    <el-dialog title="数据可视化" v-model="open" width= 90% append-to-body>
+    <el-dialog title="数据可视化" v-model="open" width=90% append-to-body>
       <highcharts :constructor-type="'stockChart'" :options="klineOptions"></highcharts>
       <template #footer>
         <div class="dialog-footer">

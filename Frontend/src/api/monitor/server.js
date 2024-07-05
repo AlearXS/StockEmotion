@@ -15,3 +15,10 @@ export function getStock() {
     method: 'get'
   })
 }
+
+export function getStockList() {
+  return request({
+    url: '/stock/list',
+    method: 'get'
+  })
+}
