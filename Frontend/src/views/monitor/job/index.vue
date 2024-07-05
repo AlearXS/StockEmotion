@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
+    <el-form  ref="queryRef" :inline="true" v-show="showSearch">
       <el-form-item prop="jobName">
-        <el-input v-model="queryParams.jobName" placeholder="请输入股票名称" clearable style="width: 200px"
+        <el-input v-model="Scode" placeholder="请输入股票代码" clearable style="width: 200px"
           @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item>
@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="stocklist">
+    <el-table :data="stocklist">
       <el-table-column label="股票代码" width="100" align="center" prop="代码" />
       <el-table-column label="股票名称" align="center" prop="股票名称" :show-overflow-tooltip="true" />
       <el-table-column label="最新价" align="center" prop="最新价" />
@@ -42,7 +42,8 @@
     </el-dialog>
 
 
-    <el-dialog title="最近新闻" v-model="openView" width="700px" append-to-body>
+    <el-dialog v-model="openView" width="700px" append-to-body>
+      <highcharts :options="cloudOptions"></highcharts>
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="openView = false">关 闭</el-button>
@@ -52,19 +53,202 @@
   </div>
 </template>
 
-<script setup name="Job">
-import { listJob, getJob, runJob } from "@/api/monitor/job";
-import { getStock, getStocklist,addlike } from '@/api/monitor/server';
+<script setup name>
+import { getStock, getStocklist, addlike, getSe } from '@/api/monitor/server';
 
 const { proxy } = getCurrentInstance();
 
-const jobList = ref([]);
 const open = ref(false);
-const loading = ref(true);
 const showSearch = ref(true);
-const total = ref(0);
 const openView = ref(false);
 const stocklist = ref()
+const Scode= ref()
+const cloudOptions = ref({
+  chart: {
+    type: 'wordcloud'
+  },
+  series: [{
+    type: 'wordcloud',
+    data: [{
+      name: "市场",
+      weight: 97,
+    },
+    {
+      name: "渗透率",
+      weight: 80,
+    },
+    {
+      name: "股价",
+      weight: 75,
+    },
+    {
+      name: "股市",
+      weight: 75,
+    },
+    {
+      name: "农业板块",
+      weight: 70,
+    },
+    {
+      name: "打破僵局",
+      weight: 68,
+    },
+    {
+      name: "高毛利",
+      weight: 60,
+    },
+    {
+      name: "集采重压",
+      weight: 55,
+    },
+    {
+      name: "盈利预期",
+      weight: 53,
+    },
+    {
+      name: "股票",
+      weight: 52,
+    },
+    {
+      name: "报表账面",
+      weight: 45,
+    },
+    {
+      name: "短期行分化",
+      weight: 43,
+    },
+    {
+      name: "企业",
+      weight: 40,
+    },
+    {
+      name: "股指",
+      weight: 40,
+    },
+    {
+      name: "预期披露",
+      weight: 38,
+    },
+    {
+      name: "技术支撑",
+      weight: 37,
+    },
+    {
+      name: "板块",
+      weight: 36,
+    },
+    {
+      name: "行业",
+      weight: 32,
+    },
+    {
+      name: "投资",
+      weight: 32,
+    },
+    {
+      name: "信息缺失",
+      weight: 31,
+    },
+    {
+      name: "经济",
+      weight: 31,
+    },
+    {
+      name: "增长",
+      weight: 30,
+    },
+    {
+      name: "沪指",
+      weight: 29,
+    },
+    {
+      name: "外延并购",
+      weight: 24,
+    },
+    {
+      name: "震荡调整",
+      weight: 21,
+    },
+    {
+      name: "公司",
+      weight: 20,
+    },
+    {
+      name: "短线操作",
+      weight: 20,
+    },
+    {
+      name: "消费",
+      weight: 19,
+    },
+    {
+      name: "周期",
+      weight: 14,
+    },
+    {
+      name: "国债",
+      weight: 12,
+    },
+    {
+      name: "期权",
+      weight: 11,
+    },
+    {
+      name: "盘中",
+      weight: 10,
+    },
+    {
+      name: "情绪风险",
+      weight: 5,
+    },
+    {
+      name: "回调",
+      weight: 4,
+    },
+    {
+      name: "军工",
+      weight: 4,
+    },
+    {
+      name: "低空经济",
+      weight: 3,
+    },
+    {
+      name: "止跌企稳",
+      weight: 3,
+    },
+    {
+      name: "热点",
+      weight: 2,
+    },
+    {
+      name: "提振政策",
+      weight: 2,
+    },
+    {
+      name: "人工智能",
+      weight: 1,
+    },
+    {
+      name: "中报",
+      weight: 1,
+    },
+    {
+      name: "资金博弈",
+      weight: 1,
+    },
+    {
+      name: "半导体",
+      weight: 1,
+    },]
+  }],
+  title: {
+    text: '新闻趋势'
+  },
+  credits: {
+    enabled: false
+  }
+})
 const groupingUnits = ref([[
   'week',                         // unit name
   [1]                             // allowed multiples
@@ -157,26 +341,14 @@ const klineOptions = ref({
   }
 })
 
-const data = reactive({
-  form: {},
-  queryParams: {
-    pageNum: 1,
-    pageSize: 10,
-    jobName: undefined,
-    jobGroup: undefined,
-    status: undefined
-  }
-});
 
-const { queryParams,} = toRefs(data);
+
 
 /** 查询定时任务列表 */
-function getList() {
-  loading.value = true;
-  listJob(queryParams.value).then(response => {
-    jobList.value = response.rows;
-    total.value = response.total;
-    loading.value = false;
+function getsearch(code) {
+  getSe(code).then(response => {
+    stocklist.value = response.data;
+    console.log(response.data)
   });
 }
 /** 取消按钮 */
@@ -186,13 +358,12 @@ function cancel() {
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  getsearch(Scode.value);
 }
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef");
-  handleQuery();
+  getstocklist();
 }
 
 /* 立即执行一次 */
@@ -242,7 +413,6 @@ function getstocklist() {
   });
 }
 getstocklist();
-getList();
 </script>
 
 <style>

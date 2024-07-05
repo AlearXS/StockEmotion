@@ -15,11 +15,10 @@ export function getStock(str) {
   })
 }
 
-export function getStocklist(stockcode) {
+export function getStocklist() {
   return request({
     url: '/stock/list',
     method: 'get',
-    param: stockcode
   })
 }
 export function getlike() {
@@ -38,5 +37,11 @@ export function delike(str) {
   return request({
     url: '/stock/like/'+str,
     method: 'delete'
+  })
+}
+export function getSe(stockcode) {
+  return request({
+    url: '/stock/list?code='+stockcode,
+    method: 'get',
   })
 }
