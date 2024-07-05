@@ -62,6 +62,7 @@ handle_exception(app)
 
 # 加载路由列表
 controller_list = [
+    {'router': stockController, 'tags': ['股票数据']},
     {'router': loginController, 'tags': ['登录模块']},
     {'router': captchaController, 'tags': ['验证码模块']},
     {'router': userController, 'tags': ['系统管理-用户管理']},
@@ -78,7 +79,6 @@ controller_list = [
     {'router': serverController, 'tags': ['系统监控-菜单管理']},
     {'router': cacheController, 'tags': ['系统监控-缓存监控']},
     {'router': commonController, 'tags': ['通用模块']},
-    {'router': stockController, 'tags': ['股票数据']}
 ]
 
 for controller in controller_list:

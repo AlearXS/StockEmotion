@@ -1,77 +1,67 @@
 <template>
    <div class="app-container">
-      <div>我是股票收藏</div>
-      <div>
-         <highcharts :constructor-type="'stockChart'" :options="klineOptions"></highcharts>
-      </div>
-      <div>
-         <highcharts :options="cloudOptions"></highcharts>
-      </div>
+      <el-table v-loading="loading" :data="likeList">
+         <el-table-column label="股票代码" width="100" align="center" prop="代码" />
+         <el-table-column label="股票名称" align="center" prop="名称" :show-overflow-tooltip="true" />
+         <el-table-column label="最新价" align="center" prop="最新价" :show-overflow-tooltip="true" />
+         <el-table-column label="成交量" align="center" prop="成交量" :show-overflow-tooltip="true" />
+         <el-table-column label="最高" align="center" prop="最高" :show-overflow-tooltip="true" />
+         <el-table-column label="最低" align="center" prop="最低" :show-overflow-tooltip="true" />
+         <el-table-column label="今开" align="center" prop="今开" :show-overflow-tooltip="true" />
+         <el-table-column label="昨收" align="center" prop="昨收" :show-overflow-tooltip="true" />
+         <el-table-column label="总市值" align="center" prop="总市值" :show-overflow-tooltip="true" />
+         <el-table-column label="涨速" align="center" prop="涨速" :show-overflow-tooltip="true" />
+         <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+            <template #default="scope">
+               <el-tooltip content="删除" placement="top">
+                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"></el-button>
+               </el-tooltip>
+               <el-tooltip content="分析" placement="top">
+                  <el-button link type="primary" icon="View" @click="handleView(scope.row)"></el-button>
+               </el-tooltip>
+            </template>
+         </el-table-column>
+      </el-table>
+
+      <el-dialog title="预测分析" v-model="openView" width="700px" append-to-body>
+         <template #footer>
+            <div class="dialog-footer">
+               <el-button @click="openView = false">关 闭</el-button>
+            </div>
+         </template>
+      </el-dialog>
    </div>
 </template>
 
 <script setup>
+import { getlike, delike, } from "@/api/monitor/server";
 
-import { ref } from 'vue';
-import { getStock } from '@/api/monitor/server';
-
-const kline = ref([]);
-
-const klineOptions = ref({
-   chart: {
-      type: 'candlestick',
-      width: null,
-      height: null,
-   },
-   series: [{
-      type: "candlestick",
-      name: "价格",
-      color: "green",
-      lineColor: "green",
-      upColor: "red",
-      upLineColor: "red",
-      data: kline
-   }],
-   credits: {
-      enabled: false
-   }
-})
-const cloudOptions = ref({
-   series: [{
-      type: 'wordcloud',
-      data: [
-         { name: '大吉大利', weight: 10 },
-         { name: '形势堪忧', weight: 7 },
-         { name: '大举投入', weight: 5 },
-         { name: '降低', weight: 15 }
-         // 添加更多词及其权重
-      ]
-   }],
-   title: {
-      text: 'Simple Wordcloud'
-   },
-   credits: {
-      enabled: false
-   }
-})
 const { proxy } = getCurrentInstance();
 
-function getList() {
-   proxy.$modal.loading("正在加载服务监控数据，请稍候！");
-   getStock().then(response => {
-      kline.value = response.data;
-      proxy.$modal.closeLoading();
+const likeList = ref([]);
+const loading = ref(true);
+const openView = ref(false);
+
+/** 任务详细信息 */
+function handleView(row) {
+   openView.value = true;
+}
+
+function getlikelist() {
+   getlike().then(response => {
+      likeList.value = response.data
+      loading.value = false;
    });
 }
-
-getList()
-</script>
-
-<style>
-.highcharts-container {
-   width: 600px;
-   height: 400px;
-   border: 1px solid #000000;
-   margin: auto;
+/** 删除按钮操作 */
+function handleDelete(row) {
+   proxy.$modal.confirm('是否取消收藏?').then(function () {
+      return delike(row.代码);
+   }).then(() => {
+      getlikelist();
+      proxy.$modal.msgSuccess("取消收藏成功");
+   }).catch(() => { });
 }
-</style>
+
+getlikelist();
+</script>
