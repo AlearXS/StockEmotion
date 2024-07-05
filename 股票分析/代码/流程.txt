@@ -1,0 +1,20 @@
+fenci
+getCategory
+newsMatrix
+
+通过涨跌幅打label
+归一化处理zscore
+finance_LSTM
+
+财务和新闻矩阵合并 / 财务和新闻矩阵合并（不归一化）
+大新闻矩阵财务合并
+multi_input_LSTM_event
+
+保留新闻同日期待情感分析
+情感分析
+情感归一化合并 / 情感可视化合并
+multi_input_LSTM_event+senti
+
+财务的预测
+财务新闻的预测
+财务新闻情感的预测
