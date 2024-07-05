@@ -21,7 +21,7 @@ class StockDao:
         :param dict_id: 字典类型id
         :return: 字典类型信息对象
         """
-        kline_for_painting_info = db.query(KLine.date, KLine.open, KLine.high, KLine.low, KLine.close, KLine.amount) \
+        kline_for_painting_info = db.query(KLine.date, KLine.open, KLine.high, KLine.low, KLine.close, KLine.volume) \
             .filter(KLine.code == code,  KLine.date >= startdate, KLine.date <= end_date) \
             .all()
             # .first()

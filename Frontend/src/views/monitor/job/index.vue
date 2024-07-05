@@ -11,34 +11,26 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="jobList">
-      <el-table-column label="股票代码" width="100" align="center" prop="jobId" />
-      <el-table-column label="股票名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
-      <el-table-column label="开盘价" align="center" prop="jobGroup" />
-      <el-table-column label="收盘价" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
-      <el-table-column label="最高价" align="center" prop="cronExpression" :show-overflow-tooltip="true" />
-      <el-table-column label="最低价" align="center" prop="cronExpression" :show-overflow-tooltip="true" />
+    <el-table v-loading="loading" :data="stocklist">
+      <el-table-column label="股票代码" width="100" align="center" prop="代码" />
+      <el-table-column label="股票名称" align="center" prop="股票名称" :show-overflow-tooltip="true" />
+      <el-table-column label="最新价" align="center" prop="最新价" />
+      <el-table-column label="涨跌幅" align="center" prop="涨跌幅" :show-overflow-tooltip="true" />
+      <el-table-column label="涨跌额" align="center" prop="涨跌额" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-tooltip content="分析详情" placement="top">
-            <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-              v-hasPermi="['monitor:job:edit']"></el-button>
+            <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="最近新闻" placement="top">
-            <el-button link type="primary" icon="View" @click="handleView(scope.row)"
-              v-hasPermi="['monitor:job:query']"></el-button>
+            <el-button link type="primary" icon="View" @click="handleView(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip content="收藏" placement="top">
-            <el-button link type="primary" icon="CaretRight" @click="handleRun(scope.row)"
-              v-hasPermi="['monitor:job:changeStatus']"></el-button>
+            <el-button link type="primary" icon="CaretRight" @click="handleRun(scope.row)"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-
-    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize" @pagination="getList" />
-
 
     <el-dialog title="数据可视化" v-model="open" width=90% append-to-body>
       <highcharts :constructor-type="'stockChart'" :options="klineOptions"></highcharts>
@@ -62,7 +54,7 @@
 
 <script setup name="Job">
 import { listJob, getJob, runJob } from "@/api/monitor/job";
-import { getStock } from '@/api/monitor/server';
+import { getStock, getStocklist,addlike } from '@/api/monitor/server';
 
 const { proxy } = getCurrentInstance();
 
@@ -70,26 +62,96 @@ const jobList = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
-const ids = ref([]);
 const total = ref(0);
-const title = ref("");
 const openView = ref(false);
-const kline = ref();
+const stocklist = ref()
+const groupingUnits = ref([[
+  'week',                         // unit name
+  [1]                             // allowed multiples
+], [
+  'month',
+  [1, 2, 3, 4, 6]
+]]);
 const klineOptions = ref({
+  rangeSelector: {
+    selected: 4
+  },
+  title: {
+    text: 'Historical Data'
+  },
   chart: {
-    type: 'candlestick',
     width: null,
     height: null,
   },
-  series: [{
-    type: "candlestick",
-    name: "价格",
-    color: "green",
-    lineColor: "green",
-    upColor: "red",
-    upLineColor: "red",
-    data: kline
+  xAxis: {
+    dateTimeLabelFormats: {
+      millisecond: "%H:%M:%S.%L",
+      second: "%H:%M:%S",
+      minute: "%H:%M",
+      hour: "%H:%M",
+      day: "%m-%d",
+      week: "%m-%d",
+      month: "%y-%m",
+      year: "%Y"
+    },
+    minRange: 30 * 24 * 3600000,
+    min: null,
+    max: null,
+    startOnTick: false,
+  },
+  yAxis: [{
+    labels: {
+      align: 'right',
+      x: -3
+    },
+    title: {
+      text: 'OHLC'
+    },
+    height: '60%',
+    lineWidth: 2,
+    resize: {
+      enabled: true
+    }
+  }, {
+    labels: {
+      align: 'right',
+      x: -3
+    },
+    title: {
+      text: 'Volume'
+    },
+    top: '65%',
+    height: '35%',
+    offset: 0,
+    lineWidth: 2
   }],
+  tooltip: {
+    split: true
+  },
+  series: [
+    {
+      type: "candlestick",
+      name: "价格",
+      color: "green",
+      lineColor: "green",
+      upColor: "red",
+      upLineColor: "red",
+
+      data: [],
+      dataGrouping: {
+        units: groupingUnits
+      }
+    },
+    {
+      type: 'column',
+      name: '成交',
+      data: [],
+      yAxis: 1,
+      dataGrouping: {
+        units: groupingUnits
+      }
+    }
+  ],
   credits: {
     enabled: false
   }
@@ -106,14 +168,13 @@ const data = reactive({
   }
 });
 
-const { queryParams, form } = toRefs(data);
+const { queryParams,} = toRefs(data);
 
 /** 查询定时任务列表 */
 function getList() {
   loading.value = true;
   listJob(queryParams.value).then(response => {
     jobList.value = response.rows;
-    console.log(jobList);
     total.value = response.total;
     loading.value = false;
   });
@@ -121,21 +182,7 @@ function getList() {
 /** 取消按钮 */
 function cancel() {
   open.value = false;
-  reset();
-}
-/** 表单重置 */
-function reset() {
-  form.value = {
-    jobId: undefined,
-    jobName: undefined,
-    jobGroup: undefined,
-    invokeTarget: undefined,
-    cronExpression: undefined,
-    misfirePolicy: "1",
-    concurrent: "1",
-    status: "0"
-  };
-  proxy.resetForm("jobRef");
+  location.reload()
 }
 /** 搜索按钮操作 */
 function handleQuery() {
@@ -150,39 +197,51 @@ function resetQuery() {
 
 /* 立即执行一次 */
 function handleRun(row) {
-  proxy.$modal.confirm('确认要收藏"' + row.jobName + '"吗?').then(function () {
-    return runJob(row.jobId);
+  proxy.$modal.confirm('确认要收藏"' + row.代码 + '"吗?').then(function () {
+    return addlike(row.代码.slice(-6));
   }).then(() => {
     proxy.$modal.msgSuccess("收藏成功");
   })
     .catch(() => { });
 }
 /** 任务详细信息 */
-function handleView(row) {
-  getJob(row.jobId).then(response => {
-    form.value = response.data;
-    openView.value = true;
-  });
-}
+function handleView() {
+  openView.value = true;
+};
 
 /** 按钮操作 */
 function handleUpdate(row) {
-  reset();
-  const jobId = row.jobId || ids.value;
-  getJob(jobId).then(response => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改任务";
-  });
-}
-function getKl() {
-  proxy.$modal.loading("正在加载服务监控数据，请稍候！");
-  getStock().then(response => {
-    kline.value = response.data;
+  let lastsix = row.代码.slice(-6);
+  getKl(lastsix)
+  open.value = true;
+};
+
+function getKl(stockid) {
+  proxy.$modal.loading("正在加载数据，请稍候！");
+  getStock(stockid).then(response => {
+    for (let i = 0; i < response.data.length; i += 1) {
+      klineOptions.value.series[0].data.push([
+        response.data[i][0], // the date
+        response.data[i][1], // open
+        response.data[i][2], // high
+        response.data[i][3], // low
+        response.data[i][4] // close
+      ]);
+      klineOptions.value.series[1].data.push({
+        x: response.data[i][0], // the date
+        y: response.data[i][5], // the volume
+        color: response.data[i][1] > response.data[i][4] ? 'green' : 'red'
+      });
+    }
     proxy.$modal.closeLoading();
   });
 }
-getKl();
+function getstocklist() {
+  getStocklist().then(response => {
+    stocklist.value = response.data
+  });
+}
+getstocklist();
 getList();
 </script>
 

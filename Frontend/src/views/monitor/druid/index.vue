@@ -1,26 +1,28 @@
 <template>
    <div class="app-container">
-      <el-table v-loading="loading" :data="jobList" >
-         <el-table-column label="股票编号" width="100" align="center" prop="jobId" />
-         <el-table-column label="股票名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
+      <el-table v-loading="loading" :data="likeList">
+         <el-table-column label="股票代码" width="100" align="center" prop="代码" />
+         <el-table-column label="股票名称" align="center" prop="名称" :show-overflow-tooltip="true" />
+         <el-table-column label="最新价" align="center" prop="最新价" :show-overflow-tooltip="true" />
+         <el-table-column label="成交量" align="center" prop="成交量" :show-overflow-tooltip="true" />
+         <el-table-column label="最高" align="center" prop="最高" :show-overflow-tooltip="true" />
+         <el-table-column label="最低" align="center" prop="最低" :show-overflow-tooltip="true" />
+         <el-table-column label="今开" align="center" prop="今开" :show-overflow-tooltip="true" />
+         <el-table-column label="昨收" align="center" prop="昨收" :show-overflow-tooltip="true" />
+         <el-table-column label="总市值" align="center" prop="总市值" :show-overflow-tooltip="true" />
+         <el-table-column label="涨速" align="center" prop="涨速" :show-overflow-tooltip="true" />
          <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
             <template #default="scope">
                <el-tooltip content="删除" placement="top">
-                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-                     v-hasPermi="['monitor:job:remove']"></el-button>
+                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"></el-button>
                </el-tooltip>
                <el-tooltip content="分析" placement="top">
-                  <el-button link type="primary" icon="View" @click="handleView(scope.row)"
-                     v-hasPermi="['monitor:job:query']"></el-button>
+                  <el-button link type="primary" icon="View" @click="handleView(scope.row)"></el-button>
                </el-tooltip>
             </template>
          </el-table-column>
       </el-table>
 
-      <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
-         v-model:limit="queryParams.pageSize" @pagination="getList" />
-
-      <!-- 任务日志详细 -->
       <el-dialog title="预测分析" v-model="openView" width="700px" append-to-body>
          <template #footer>
             <div class="dialog-footer">
@@ -31,59 +33,35 @@
    </div>
 </template>
 
-<script setup name="Job">
-import { listJob, getJob, delJob } from "@/api/monitor/job";
-const router = useRouter();
+<script setup>
+import { getlike, delike, } from "@/api/monitor/server";
+
 const { proxy } = getCurrentInstance();
 
-const jobList = ref([]);
+const likeList = ref([]);
 const loading = ref(true);
-const ids = ref([]);
-const total = ref(0);
 const openView = ref(false);
-
-
-const data = reactive({
-   form: {},
-   queryParams: {
-      pageNum: 1,
-      pageSize: 10,
-      jobName: undefined,
-      jobGroup: undefined,
-      status: undefined
-   }
-});
-
-const { queryParams, form} = toRefs(data);
-
-/** 查询定时任务列表 */
-function getList() {
-   loading.value = true;
-   listJob(queryParams.value).then(response => {
-      jobList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
-   });
-}
 
 /** 任务详细信息 */
 function handleView(row) {
-   getJob(row.jobId).then(response => {
-      form.value = response.data;
-      openView.value = true;
-   });
+   openView.value = true;
 }
 
+function getlikelist() {
+   getlike().then(response => {
+      likeList.value = response.data
+      loading.value = false;
+   });
+}
 /** 删除按钮操作 */
 function handleDelete(row) {
-   const jobIds = row.jobId || ids.value;
    proxy.$modal.confirm('是否取消收藏?').then(function () {
-      return delJob(jobIds);
+      return delike(row.代码);
    }).then(() => {
-      getList();
+      getlikelist();
       proxy.$modal.msgSuccess("取消收藏成功");
    }).catch(() => { });
 }
 
-getList();
+getlikelist();
 </script>
