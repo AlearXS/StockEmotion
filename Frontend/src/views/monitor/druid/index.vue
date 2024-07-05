@@ -23,7 +23,8 @@
          </el-table-column>
       </el-table>
 
-      <el-dialog title="预测分析" v-model="openView" width="700px" append-to-body>
+      <el-dialog v-model="openView" width="700px" append-to-body>
+         <highcharts :options="chartOptions"></highcharts>
          <template #footer>
             <div class="dialog-footer">
                <el-button @click="openView = false">关 闭</el-button>
@@ -41,7 +42,68 @@ const { proxy } = getCurrentInstance();
 const likeList = ref([]);
 const loading = ref(true);
 const openView = ref(false);
-
+const chartOptions = ref(
+   {
+      title: {
+         text: 'Prediction',
+         align: 'left'
+      },
+      xAxis: {
+         labels: {
+            enabled: false
+         }
+      },
+      yAxis: {
+         title: {
+            text: '股价'
+         },
+         labels: {
+            enabled: false
+         }
+      },
+      legend: {
+         layout: 'vertical',
+         align: 'right',
+         verticalAlign: 'middle'
+      },
+      plotOptions: {
+         series: {
+            marker: {
+               enabled: false
+            }
+         }
+      },
+      series: [{
+         name: '真实值',
+         data: [
+            43934, 48656, 65165, 81827, 112143, 142383,
+            171533, 165174, 155157, 161454, 154610
+         ]
+      }, {
+         name: '预测值',
+         data: [
+            24916, 37941, 29742, 29851, 32490, 30282,
+            38121, 36885, 33726, 34243, 31050
+         ]
+      }],
+      responsive: {
+         rules: [{
+            condition: {
+               maxWidth: 500
+            },
+            chartOptions: {
+               legend: {
+                  layout: 'horizontal',
+                  align: 'center',
+                  verticalAlign: 'bottom'
+               }
+            }
+         }]
+      },
+      credits: {
+         enabled: false
+      }
+   });
 /** 任务详细信息 */
 function handleView(row) {
    openView.value = true;

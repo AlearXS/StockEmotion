@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
       <el-form-item prop="jobName">
-        <el-input v-model="queryParams.jobName" placeholder="请输入股票名称" clearable style="width: 200px"
+        <el-input v-model="queryParams.jobName" placeholder="请输入股票信息" clearable style="width: 200px"
           @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item>
@@ -42,7 +42,8 @@
     </el-dialog>
 
 
-    <el-dialog title="最近新闻" v-model="openView" width="700px" append-to-body>
+    <el-dialog v-model="openView" width="700px" append-to-body>
+      <highcharts :options="cloudOptions"></highcharts>
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="openView = false">关 闭</el-button>
@@ -54,7 +55,7 @@
 
 <script setup name="Job">
 import { listJob, getJob, runJob } from "@/api/monitor/job";
-import { getStock, getStocklist,addlike } from '@/api/monitor/server';
+import { getStock, getStocklist, addlike } from '@/api/monitor/server';
 
 const { proxy } = getCurrentInstance();
 
@@ -65,6 +66,30 @@ const showSearch = ref(true);
 const total = ref(0);
 const openView = ref(false);
 const stocklist = ref()
+const cloudOptions = ref({
+  chart: {
+    type: 'wordcloud'
+  },
+  series: [{
+    type: 'wordcloud',
+    data: [{
+      name: 'Lorem',
+      weight: 10
+    }, {
+      name: 'Ipsum',
+      weight: 9
+    }, {
+      name: 'Dolor',
+      weight: 8
+    }]
+  }],
+  title: {
+    text: '新闻趋势'
+  },
+  credits: {
+    enabled: false
+  }
+})
 const groupingUnits = ref([[
   'week',                         // unit name
   [1]                             // allowed multiples
@@ -168,7 +193,7 @@ const data = reactive({
   }
 });
 
-const { queryParams,} = toRefs(data);
+const { queryParams } = toRefs(data);
 
 /** 查询定时任务列表 */
 function getList() {
