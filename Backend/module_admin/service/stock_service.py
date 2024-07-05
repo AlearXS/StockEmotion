@@ -16,13 +16,10 @@ class StockService:
 		获取 k 线数据
 		'''
 		res = StockDao.get_kline_for_painting_by_code(query_db, code, startdate, end_date, adjust)
-		# breakpoint()
 		
 		res = [
 			[datetime.datetime.combine(datetime.datetime.fromisoformat(row[0]), datetime.time(0, 0, 0)).timestamp() * 1000, row[1], row[2], row[3], row[4], row[5]]
 			for row in res
 		]
 
-
-		# stock_kline_df
 		return res
