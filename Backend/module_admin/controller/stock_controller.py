@@ -40,7 +40,7 @@ async def get_stock_heat_list():
 
 
 @stockController.get("/overall", response_model=list[PageResponseModel])
-async def get_system_test_list(request: Request):
+async def get_overall(request: Request):
 	'''
 	测试前后端连接，返回股票总览
 	'''
@@ -57,7 +57,7 @@ async def get_system_test_list(request: Request):
 def kline(code : str = '000001', startdate: datetime.date = datetime.date(2023, 1, 1), end_date = datetime.datetime.now().date(), adjust: str = "", query_db: Session = Depends(get_db)):
 	'''
 	:param code 股票代码
-	:param adjust 复权方式，当前无效果，默认无复权
+	:param adjust 复权方式，默认无复权
 	:return 最近一年的 k 线数据 : dataframe 
 	'''
 
