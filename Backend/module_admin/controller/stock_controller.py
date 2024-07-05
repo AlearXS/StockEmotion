@@ -23,16 +23,20 @@ import datetime
 stockController = APIRouter(prefix='/stock')
 
 @stockController.get('/list')
-async def get_stock_heat_list():
+async def get_stock_heat_list(code: Optional[str] = None, name: Optional[str] = None):
 	'''
 	返回实时股票行情
 	按涨跌幅排序
 	'''
 	logger.info('股票热度')
 	try:
-		df = ak.stock_hot_rank_em() 
-		# df.sort_values('涨跌幅', inplace=True)
-		# res = StockService.get_short_kline_for_painting_by_code(query_db, code, startdate, end_date, adjust)
+
+		df = ak.stock_hot_rank_em()
+		if code:
+			t = df.代码.apply(lambda s: s[2:])
+			df = df[t == code]
+		if name:
+			df = df[df.股票名称 == name]
 		return ResponseUtil.success(data=[{**row} for _, row in df.iterrows()])
 	except Exception as e:
 		logger.exception(e)
