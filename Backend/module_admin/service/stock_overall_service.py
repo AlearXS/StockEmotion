@@ -1,4 +1,4 @@
-from module_admin.entity.vo.stock_overall_vo import StockOverallModel, StockOverallModels
+from module_admin.entity.vo.stock_overall_vo import *
 import akshare as ak
 
 def get_stock_overall_list_service():
