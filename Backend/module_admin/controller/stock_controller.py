@@ -30,13 +30,18 @@ async def get_stock_heat_list(code: Optional[str] = None, name: Optional[str] = 
 	'''
 	logger.info('股票热度')
 	try:
-
 		df = ak.stock_hot_rank_em()
+		# breakpoint()
 		if code:
 			t = df.代码.apply(lambda s: s[2:])
 			df = df[t == code]
 		if name:
 			df = df[df.股票名称 == name]
+		for i in df.columns:
+			df[i] = df[i].astype(str)
+		df.涨跌额 = df.涨跌额.apply(lambda x: f'{float(x):.4}')
+		data = [{**row} for _, row in df.iterrows()]
+		# breakpoint()
 		return ResponseUtil.success(data=[{**row} for _, row in df.iterrows()])
 	except Exception as e:
 		logger.exception(e)
